@@ -5,6 +5,19 @@
  */
 package Emergentes;
 
+import Conexion.Conexion;
+import Conexion.Informe;
+import Conexion.municipio;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Cris
@@ -14,8 +27,37 @@ public class Ingresos_Informes extends javax.swing.JInternalFrame {
     /**
      * Creates new form Ingresos_Informes
      */
+    DefaultTableModel model;
+    Connection conn;
+    ArrayList<municipio> mun = new ArrayList<municipio>();
+
     public Ingresos_Informes() {
         initComponents();
+        Municipios();
+    }
+    Informe i = new Informe();
+
+    public void Municipios() {
+        int cont = 1;
+        String sql = "SELECT * FROM municipio;";
+        Conexion con = new Conexion();
+        com.mysql.jdbc.Connection cn = con.conectarMySQL();
+
+        try {
+            com.mysql.jdbc.Statement st = (com.mysql.jdbc.Statement) cn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+               municipio m = new municipio();
+               m.setNombre(rs.getString("nombre"));
+               m.setID(rs.getString("ID"));
+               mun.add(m);
+            }
+            for (int i = 0; i < mun.size(); i++) {
+                BOX.addItem(mun.get(i).getNombre());
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }
 
     /**
@@ -28,11 +70,25 @@ public class Ingresos_Informes extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        nis = new javax.swing.JTextField();
         id1 = new javax.swing.JLabel();
         id2 = new javax.swing.JLabel();
+        id3 = new javax.swing.JLabel();
+        Comentario = new javax.swing.JLabel();
+        id5 = new javax.swing.JLabel();
+        BOX = new javax.swing.JComboBox<>();
+        id6 = new javax.swing.JLabel();
+        id7 = new javax.swing.JLabel();
+        id8 = new javax.swing.JLabel();
+        id9 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
+        estado = new javax.swing.JTextField();
+        nis = new javax.swing.JTextField();
         nombres = new javax.swing.JTextField();
-        nombres1 = new javax.swing.JTextField();
+        apellidos = new javax.swing.JTextField();
+        monto = new javax.swing.JTextField();
+        fecha = new javax.swing.JTextField();
 
         setClosable(true);
         setIconifiable(true);
@@ -42,36 +98,126 @@ public class Ingresos_Informes extends javax.swing.JInternalFrame {
         jPanel1.setBackground(new java.awt.Color(229, 241, 246));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        id1.setFont(new java.awt.Font("Century Gothic", 0, 12)); // NOI18N
+        id1.setForeground(new java.awt.Color(4, 51, 83));
+        id1.setText("(año-mes-dia)");
+        jPanel1.add(id1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 200, 90, 30));
+
+        id2.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        id2.setForeground(new java.awt.Color(4, 51, 83));
+        id2.setText("Demandado/Cliente");
+        jPanel1.add(id2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, -1, 30));
+
+        id3.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        id3.setForeground(new java.awt.Color(4, 51, 83));
+        id3.setText("Q");
+        jPanel1.add(id3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 100, 20, 30));
+
+        Comentario.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        Comentario.setForeground(new java.awt.Color(4, 51, 83));
+        Comentario.setText("Comentario");
+        jPanel1.add(Comentario, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 290, 110, 30));
+
+        id5.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        id5.setForeground(new java.awt.Color(4, 51, 83));
+        id5.setText("Monto Reclamado");
+        jPanel1.add(id5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 170, 30));
+
+        BOX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BOXActionPerformed(evt);
+            }
+        });
+        jPanel1.add(BOX, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 150, 150, 20));
+
+        id6.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        id6.setForeground(new java.awt.Color(4, 51, 83));
+        id6.setText("Municipio");
+        jPanel1.add(id6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 90, 40));
+
+        id7.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        id7.setForeground(new java.awt.Color(4, 51, 83));
+        id7.setText("NIS");
+        jPanel1.add(id7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 30, 30));
+
+        id8.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        id8.setForeground(new java.awt.Color(4, 51, 83));
+        id8.setText("Fecha Envio Abogado");
+        jPanel1.add(id8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 200, 30));
+
+        id9.setFont(new java.awt.Font("Century Gothic", 0, 18)); // NOI18N
+        id9.setForeground(new java.awt.Color(4, 51, 83));
+        id9.setText("Estado");
+        jPanel1.add(id9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, 60, 30));
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 320, 490, -1));
+
+        jButton1.setBackground(new java.awt.Color(43, 146, 228));
+        jButton1.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(4, 51, 83));
+        jButton1.setText("REGISTRAR");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jButton1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jButton1KeyPressed(evt);
+            }
+        });
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 450, 110, 40));
+
+        estado.setForeground(new java.awt.Color(4, 51, 83));
+        estado.setText("Amarillo, etc.");
+        estado.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        estado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                estadoMouseClicked(evt);
+            }
+        });
+        estado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                estadoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(estado, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 250, 130, 30));
+
         nis.setForeground(new java.awt.Color(4, 51, 83));
-        nis.setText("Numero de NIS");
+        nis.setText("Numero NIS");
         nis.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        nis.setCaretColor(new java.awt.Color(4, 51, 83));
         nis.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 nisMouseClicked(evt);
             }
         });
-        nis.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                nisKeyReleased(evt);
+        nis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nisActionPerformed(evt);
             }
         });
-        jPanel1.add(nis, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 20, 150, 30));
-
-        id1.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        id1.setForeground(new java.awt.Color(4, 51, 83));
-        id1.setText("NIS");
-        jPanel1.add(id1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 30, 30));
-
-        id2.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        id2.setForeground(new java.awt.Color(4, 51, 83));
-        id2.setText("Demandado/Cliente");
-        jPanel1.add(id2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 150, 30));
+        nis.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                nisKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                nisKeyTyped(evt);
+            }
+        });
+        jPanel1.add(nis, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 20, 140, 30));
 
         nombres.setForeground(new java.awt.Color(4, 51, 83));
-        nombres.setText("Apellidos");
+        nombres.setText("Nombres");
         nombres.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        nombres.setCaretColor(new java.awt.Color(4, 51, 83));
         nombres.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 nombresMouseClicked(evt);
@@ -82,88 +228,178 @@ public class Ingresos_Informes extends javax.swing.JInternalFrame {
                 nombresActionPerformed(evt);
             }
         });
-        nombres.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                nombresKeyReleased(evt);
-            }
-        });
-        jPanel1.add(nombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 60, 150, 30));
+        jPanel1.add(nombres, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 60, 140, 30));
 
-        nombres1.setForeground(new java.awt.Color(4, 51, 83));
-        nombres1.setText("Nombres");
-        nombres1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        nombres1.setCaretColor(new java.awt.Color(4, 51, 83));
-        nombres1.addMouseListener(new java.awt.event.MouseAdapter() {
+        apellidos.setForeground(new java.awt.Color(4, 51, 83));
+        apellidos.setText("Apellidos");
+        apellidos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        apellidos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                nombres1MouseClicked(evt);
+                apellidosMouseClicked(evt);
             }
         });
-        nombres1.addActionListener(new java.awt.event.ActionListener() {
+        apellidos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nombres1ActionPerformed(evt);
+                apellidosActionPerformed(evt);
             }
         });
-        nombres1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                nombres1KeyReleased(evt);
+        jPanel1.add(apellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 60, 140, 30));
+
+        monto.setForeground(new java.awt.Color(4, 51, 83));
+        monto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        monto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                montoMouseClicked(evt);
             }
         });
-        jPanel1.add(nombres1, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 60, 150, 30));
+        monto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                montoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(monto, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 100, 140, 30));
+
+        fecha.setForeground(new java.awt.Color(4, 51, 83));
+        fecha.setText("Fecha");
+        fecha.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        fecha.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fechaMouseClicked(evt);
+            }
+        });
+        fecha.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fechaActionPerformed(evt);
+            }
+        });
+        jPanel1.add(fecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 200, 130, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void BOXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BOXActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_BOXActionPerformed
+
+    private void estadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_estadoMouseClicked
+        estado.setText("");
+    }//GEN-LAST:event_estadoMouseClicked
+
+    private void estadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_estadoActionPerformed
+
+    }//GEN-LAST:event_estadoActionPerformed
+
     private void nisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nisMouseClicked
         nis.setText("");
     }//GEN-LAST:event_nisMouseClicked
 
-    private void nisKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nisKeyReleased
-        String texto = nis.getText();
-        filtrado_user(texto);
-    }//GEN-LAST:event_nisKeyReleased
+    private void nisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nisActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nisActionPerformed
 
     private void nombresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nombresMouseClicked
-        // TODO add your handling code here:
+        nombres.setText("");
     }//GEN-LAST:event_nombresMouseClicked
-
-    private void nombresKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombresKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nombresKeyReleased
 
     private void nombresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombresActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_nombresActionPerformed
 
-    private void nombres1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nombres1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nombres1MouseClicked
+    private void apellidosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_apellidosMouseClicked
+        apellidos.setText("");
+    }//GEN-LAST:event_apellidosMouseClicked
 
-    private void nombres1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nombres1ActionPerformed
+    private void apellidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_apellidosActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_nombres1ActionPerformed
+    }//GEN-LAST:event_apellidosActionPerformed
 
-    private void nombres1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nombres1KeyReleased
+    private void montoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_montoMouseClicked
+        monto.setText("");
+    }//GEN-LAST:event_montoMouseClicked
+
+    private void montoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_montoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_nombres1KeyReleased
+    }//GEN-LAST:event_montoActionPerformed
+
+    private void fechaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fechaMouseClicked
+        fecha.setText("");
+    }//GEN-LAST:event_fechaMouseClicked
+
+    private void fechaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fechaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_fechaActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        /*ENVIO DE REGISTRO CONSULA A BASE DE DATOS*/
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void nisKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nisKeyPressed
+
+    }//GEN-LAST:event_nisKeyPressed
+
+    private void nisKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nisKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_nisKeyTyped
+
+    private void jButton1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButton1KeyPressed
+
+
+    }//GEN-LAST:event_jButton1KeyPressed
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+
+        if (nis.getText().equals("") || nis.getText().equals(" ")) {
+
+        } else {
+            String nombre = nombres.getText() + " " + apellidos.getText();
+            String Monto = "Q" + monto.getText();
+            String E = (String) BOX.getSelectedItem();
+            municipio m = new municipio();
+            
+            for (int j = 0; j < mun.size(); j++) {
+                if (mun.get(j).getNombre() == E){
+                    System.out.println("EL ID ES: "+mun.get(j).getID());
+                }
+            }
+            JOptionPane.showMessageDialog(null, "SELECCIONASTE: " + E, "¿Correcto?",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> BOX;
+    private javax.swing.JLabel Comentario;
+    private javax.swing.JTextField apellidos;
+    private javax.swing.JTextField estado;
+    private javax.swing.JTextField fecha;
     private javax.swing.JLabel id1;
     private javax.swing.JLabel id2;
+    private javax.swing.JLabel id3;
+    private javax.swing.JLabel id5;
+    private javax.swing.JLabel id6;
+    private javax.swing.JLabel id7;
+    private javax.swing.JLabel id8;
+    private javax.swing.JLabel id9;
+    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField monto;
     private javax.swing.JTextField nis;
     private javax.swing.JTextField nombres;
-    private javax.swing.JTextField nombres1;
     // End of variables declaration//GEN-END:variables
 }
